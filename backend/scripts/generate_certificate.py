@@ -4,41 +4,41 @@ import cv2
 import requests
 import numpy as np
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-load_dotenv()
-api_key = os.environ.get("OPENAI_API_KEY")
-openai.api_key = api_key
+# load_dotenv()
+# api_key = os.environ.get("OPENAI_API_KEY")
+# openai.api_key = api_key
 
-client = OpenAI()
+# client = OpenAI()
 
-original_prompt = (
-    "Generate a minimalist certificate of completion with a simple and light background, "
-    "a red and gold yellow color scheme, featuring a centered `Certificate of Completion` heading, "
-    "recipient name field, achievement `10 academy awards`, additional text `For week 3 challenges`, "
-    "signatures `Yabebal Fantaye, Scientific Director, co-CEO` and `Arun Sharma, Managing Director, co-CEO`, "
-    "a large centered number `10` at the top, a thin blue border, and modern sans-serif font, "
-    "prioritizing simplicity, negative space, visual balance, and readability. "
-)
+# original_prompt = (
+#     "Generate a minimalist certificate of completion with a simple and light background, "
+#     "a red and gold yellow color scheme, featuring a centered `Certificate of Completion` heading, "
+#     "recipient name field, achievement `10 academy awards`, additional text `For week 3 challenges`, "
+#     "signatures `Yabebal Fantaye, Scientific Director, co-CEO` and `Arun Sharma, Managing Director, co-CEO`, "
+#     "a large centered number `10` at the top, a thin blue border, and modern sans-serif font, "
+#     "prioritizing simplicity, negative space, visual balance, and readability. "
+# )
 
-updated_prompt = (
-    "I NEED to test how the tool works with extremely simple prompts. "
-    "DO NOT add any detail, just use it AS-IS: " + original_prompt
-)
+# updated_prompt = (
+#     "I NEED to test how the tool works with extremely simple prompts. "
+#     "DO NOT add any detail, just use it AS-IS: " + original_prompt
+# )
 
-response = client.images.generate(
-    model="dall-e-3",
-    prompt=updated_prompt,
-    size="1024x1024",
-    quality="standard",
-    n=1,
-)
+# response = client.images.generate(
+#     model="dall-e-3",
+#     prompt=updated_prompt,
+#     size="1024x1024",
+#     quality="standard",
+#     n=1,
+# )
 
-image_url = response.data[0].url
-image_data = requests.get(image_url).content
-image_np = np.frombuffer(image_data, np.uint8)
-certificate_background = cv2.imdecode(image_np, cv2.IMREAD_COLOR)
-cv2.imwrite("certificate.png", certificate_background)
+# image_url = response.data[0].url
+# image_data = requests.get(image_url).content
+# image_np = np.frombuffer(image_data, np.uint8)
+# certificate_background = cv2.imdecode(image_np, cv2.IMREAD_COLOR)
+# cv2.imwrite("certificate.png", certificate_background)
 certificate_background = cv2.imread("certificate.png")
 
 full_name = "Mubarek Hussen"
