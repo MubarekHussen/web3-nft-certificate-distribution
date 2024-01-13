@@ -1,6 +1,5 @@
 import cv2
 
-# List of users
 users = [
     {"name": "Misganaw Berihun", "email": "msganawberihun10@gmail.com", "date": "January 12, 2024"},
     {"name": "Mubarek Hussen", "email": "mubahussen2014@gmail.com", "date": "January 12, 2024"},
@@ -12,7 +11,6 @@ def create_certificate(full_name, date):
     logo_path = "./assets/images/10x_logo.jpg"
     logo = cv2.imread(logo_path)
 
-    # Add full name to the certificate
     text_size = cv2.getTextSize(full_name, cv2.FONT_HERSHEY_SIMPLEX, 1.5, 2)[0]
     text_x = (certificate_background.shape[1] - text_size[0]) // 2
     text_y = (certificate_background.shape[0] + text_size[1]) // 2 - 70
@@ -26,7 +24,6 @@ def create_certificate(full_name, date):
         2,
     )
 
-    # Add date to the certificate
     text_size = cv2.getTextSize(date, cv2.FONT_HERSHEY_SIMPLEX, 1, 2)[0]
     text_x = (certificate_background.shape[1] - text_size[0]) // 2
     text_y = (certificate_background.shape[0] + text_size[1]) // 2 - 10
@@ -40,14 +37,11 @@ def create_certificate(full_name, date):
         2,
     )
 
-    # Add logo to the certificate
     logo = cv2.resize(logo, (100, 100))
     height, width, _ = logo.shape
     certificate_background[0:height, 0:width] = logo
 
-    # Save the certificate with the name of the person
     cv2.imwrite(f"./assets/certificates/{full_name}_certificate.png", certificate_background)
 
-# Create a certificate for each user
 for user in users:
     create_certificate(user["name"], user["date"])
