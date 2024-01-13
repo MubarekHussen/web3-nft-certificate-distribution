@@ -2,12 +2,9 @@ from algosdk import transaction
 from algosdk.v2client import algod
 
 
-# Specify the node address and token.
-
 algod_address = "http://localhost:4001"
 algod_token = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 
-# Initialize an algod client
 algod_client = algod.AlgodClient(algod_token=algod_token, algod_address=algod_address)
 
 
@@ -24,20 +21,16 @@ def create_asset(sender_address, sender_private_key, asset_url):
         freeze=sender_address,
         clawback=sender_address,
         url=asset_url,
-        total=1000,
+        total=1,
         decimals=0,
     )
 
-    # Sign with secret key of creator
     stxn = txn.sign(sender_private_key)
-    # Send the transaction to the network and retrieve the txid.
     txid = algod_client.send_transaction(stxn)
     print(f"Sent asset create transaction with txid: {txid}")
-    # Wait for the transaction to be confirmed
     results = transaction.wait_for_confirmation(algod_client, txid, 4)
     print(f"Result confirmed in round: {results['confirmed-round']}")
 
-    # Get the asset ID from the transaction confirmation result
     asset_id = results['asset-index']
     print(f"Created asset with ID: {asset_id}")
 
@@ -46,7 +39,7 @@ def create_asset(sender_address, sender_private_key, asset_url):
 
 def transfer_asset(sender_address, sender_private_key, receiver_address, asset_id, amount):
     sp = algod_client.suggested_params()
-    # Create transfer transaction
+    amount = 1
     xfer_txn = transaction.AssetTransferTxn(
         sender=sender_address,
         sp=sp,
@@ -74,7 +67,6 @@ def transfer_asset(sender_address, sender_private_key, receiver_address, asset_i
 
 def freeze_asset(manager_address, manager_private_key, receiver_address, asset_id, freeze_state):
     sp = algod_client.suggested_params()
-    # Create freeze transaction
     freeze_txn = transaction.AssetFreezeTxn(
         sender=manager_address,
         sp=sp,
@@ -94,8 +86,6 @@ def freeze_asset(manager_address, manager_private_key, receiver_address, asset_i
 
 def opt_in_to_asset(sender_address, sender_private_key, asset_id):
     sp = algod_client.suggested_params()
-    # Create opt-in transaction
-    # asset transfer from me to me for asset id we want to opt-in to with amt==0
     optin_txn = transaction.AssetOptInTxn(
         sender=sender_address, sp=sp, index=asset_id
     )
@@ -103,7 +93,6 @@ def opt_in_to_asset(sender_address, sender_private_key, asset_id):
     txid = algod_client.send_transaction(signed_optin_txn)
     print(f"Sent opt in transaction with txid: {txid}")
 
-    # Wait for the transaction to be confirmed
     results = transaction.wait_for_confirmation(algod_client, txid, 4)
     print(f"Result confirmed in round: {results['confirmed-round']}")
 
@@ -114,13 +103,11 @@ def opt_in_to_asset(sender_address, sender_private_key, asset_id):
         if asset["asset-id"] == asset_id
     ].pop()
 
-    # Check if the account already has some amount of the asset
     if matching_asset["amount"] != 0:
         print(f"Account already has {matching_asset['amount']} amount of the asset")
     else:
         print("Account has 0 amount of the asset")
 
-    # Check if the asset is frozen
     if matching_asset["is-frozen"]:
         print("The asset is frozen")
     else:
